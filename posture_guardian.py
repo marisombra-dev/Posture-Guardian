@@ -148,7 +148,7 @@ class PostureGuardian:
         
         message_label = tk.Label(
             frame,
-            text="Sit up straight, mi amor 💚",
+            text="Sit up straight 💚",
             font=('Helvetica', 16),
             bg='#FF3B30',
             fg='white'
