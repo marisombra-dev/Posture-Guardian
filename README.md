@@ -45,8 +45,8 @@ python posture_guardian.py
 
 ## Settings
 
-- **Alert Sensitivity**: Lower numbers = stricter posture requirements (5-20°)
-- **Alert Duration**: How long the warning stays visible (1-10 seconds)
+- **Alert Sensitivity**: Lower numbers = stricter posture requirements (5-20°) default = 8°
+- **Alert Duration**: How long the warning stays visible (1-10 seconds) default = 3 seconds 
 
 ## Tips
 
