@@ -74,3 +74,10 @@ python posture_guardian.py
 ---
 
 Made with 💚 for your wellbeing
+
+## 💫 Let's connect
+- 💌 [Email](mailto:marisombra@proton.me)
+- 🎮 [Twitch](https://www.twitch.tv/marissombra)    
+- 🧵 [TikTok](https://www.tiktok.com/@marissombra)
+- 🪩 [Itch.io](https://marisombra.itch.io/) (for games)
+
