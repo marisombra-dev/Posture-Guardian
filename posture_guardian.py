@@ -148,7 +148,7 @@ class PostureGuardian:
         
         message_label = tk.Label(
             frame,
-            text="Sit up straight 💚",
+            text="Sit up straight, mi amor 💚",
             font=('Helvetica', 16),
             bg='#FF3B30',
             fg='white'
@@ -242,7 +242,7 @@ class PostureGuardian:
         
         # Display frame
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = cv2.resize(frame, (640, 480))
+        frame = cv2.resize(frame, (480, 360))  # Smaller video feed
         
         # Convert to PhotoImage
         from PIL import Image, ImageTk
@@ -261,8 +261,9 @@ class PostureGuardian:
         """Create the main GUI window"""
         self.root = tk.Tk()
         self.root.title("Posture Guardian 🌿")
-        self.root.geometry("700x700")
+        self.root.geometry("700x900")
         self.root.configure(bg='#667eea')
+        self.root.resizable(True, True)
         
         # Title
         title = tk.Label(
@@ -318,51 +319,75 @@ class PostureGuardian:
             bg='#667eea',
             fg='white',
             padx=20,
-            pady=20
+            pady=15
         )
-        settings_frame.pack(pady=20, padx=20, fill='x')
+        settings_frame.pack(pady=15, padx=20, fill='x')
         
-        # Sensitivity slider
+        # Sensitivity controls
         sens_frame = tk.Frame(settings_frame, bg='#667eea')
-        sens_frame.pack(fill='x', pady=5)
+        sens_frame.pack(fill='x', pady=8)
         
         tk.Label(
             sens_frame,
-            text="Alert Sensitivity (lower = stricter):",
+            text="Alert Sensitivity:",
             bg='#667eea',
             fg='white',
-            font=('Helvetica', 10)
+            font=('Helvetica', 11)
         ).pack(side='left')
         
         self.sens_value = tk.Label(
             sens_frame,
-            text="12°",
+            text="8°",
             bg='#667eea',
             fg='white',
-            font=('Helvetica', 10, 'bold')
+            font=('Helvetica', 11, 'bold'),
+            width=5
         )
-        self.sens_value.pack(side='right')
+        self.sens_value.pack(side='left', padx=10)
         
-        sens_slider = ttk.Scale(
-            settings_frame,
-            from_=5,
-            to=20,
-            value=12,
-            orient='horizontal',
-            command=lambda v: self.update_sensitivity(float(v))
-        )
-        sens_slider.pack(fill='x', pady=5)
+        sens_btn_frame = tk.Frame(sens_frame, bg='#667eea')
+        sens_btn_frame.pack(side='left')
         
-        # Duration slider
+        tk.Button(
+            sens_btn_frame,
+            text="-",
+            command=self.decrease_sensitivity,
+            font=('Helvetica', 14, 'bold'),
+            bg='white',
+            fg='#667eea',
+            width=3,
+            cursor='hand2'
+        ).pack(side='left', padx=2)
+        
+        tk.Button(
+            sens_btn_frame,
+            text="+",
+            command=self.increase_sensitivity,
+            font=('Helvetica', 14, 'bold'),
+            bg='white',
+            fg='#667eea',
+            width=3,
+            cursor='hand2'
+        ).pack(side='left', padx=2)
+        
+        tk.Label(
+            sens_frame,
+            text="(lower = stricter)",
+            bg='#667eea',
+            fg='white',
+            font=('Helvetica', 9)
+        ).pack(side='left', padx=10)
+        
+        # Duration controls
         dur_frame = tk.Frame(settings_frame, bg='#667eea')
-        dur_frame.pack(fill='x', pady=5)
+        dur_frame.pack(fill='x', pady=8)
         
         tk.Label(
             dur_frame,
             text="Alert Duration:",
             bg='#667eea',
             fg='white',
-            font=('Helvetica', 10)
+            font=('Helvetica', 11)
         ).pack(side='left')
         
         self.dur_value = tk.Label(
@@ -370,19 +395,35 @@ class PostureGuardian:
             text="3s",
             bg='#667eea',
             fg='white',
-            font=('Helvetica', 10, 'bold')
+            font=('Helvetica', 11, 'bold'),
+            width=5
         )
-        self.dur_value.pack(side='right')
+        self.dur_value.pack(side='left', padx=10)
         
-        dur_slider = ttk.Scale(
-            settings_frame,
-            from_=1,
-            to=10,
-            value=3,
-            orient='horizontal',
-            command=lambda v: self.update_duration(float(v))
-        )
-        dur_slider.pack(fill='x', pady=5)
+        dur_btn_frame = tk.Frame(dur_frame, bg='#667eea')
+        dur_btn_frame.pack(side='left')
+        
+        tk.Button(
+            dur_btn_frame,
+            text="-",
+            command=self.decrease_duration,
+            font=('Helvetica', 14, 'bold'),
+            bg='white',
+            fg='#667eea',
+            width=3,
+            cursor='hand2'
+        ).pack(side='left', padx=2)
+        
+        tk.Button(
+            dur_btn_frame,
+            text="+",
+            command=self.increase_duration,
+            font=('Helvetica', 14, 'bold'),
+            bg='white',
+            fg='#667eea',
+            width=3,
+            cursor='hand2'
+        ).pack(side='left', padx=2)
         
         # Start camera
         self.cap = cv2.VideoCapture(0)
@@ -393,15 +434,29 @@ class PostureGuardian:
         
         self.root.mainloop()
     
-    def update_sensitivity(self, value):
-        """Update sensitivity setting"""
-        self.sensitivity = int(value)
-        self.sens_value.config(text=f"{self.sensitivity}°")
+    def increase_sensitivity(self):
+        """Increase sensitivity (make it less strict)"""
+        if self.sensitivity < 20:
+            self.sensitivity += 1
+            self.sens_value.config(text=f"{self.sensitivity}°")
     
-    def update_duration(self, value):
-        """Update alert duration setting"""
-        self.alert_duration = int(value)
-        self.dur_value.config(text=f"{self.alert_duration}s")
+    def decrease_sensitivity(self):
+        """Decrease sensitivity (make it more strict)"""
+        if self.sensitivity > 3:
+            self.sensitivity -= 1
+            self.sens_value.config(text=f"{self.sensitivity}°")
+    
+    def increase_duration(self):
+        """Increase alert duration"""
+        if self.alert_duration < 10:
+            self.alert_duration += 1
+            self.dur_value.config(text=f"{self.alert_duration}s")
+    
+    def decrease_duration(self):
+        """Decrease alert duration"""
+        if self.alert_duration > 1:
+            self.alert_duration -= 1
+            self.dur_value.config(text=f"{self.alert_duration}s")
     
     def on_closing(self):
         """Clean up on window close"""
