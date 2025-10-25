@@ -26,7 +26,7 @@ class PostureGuardian:
         # State
         self.good_posture = None
         self.bad_posture_counter = 0
-        self.sensitivity = 12  # degrees
+        self.sensitivity = 8  # degrees (more sensitive by default)
         self.alert_duration = 3  # seconds
         self.last_alert_time = 0
         self.monitoring = False
@@ -148,7 +148,7 @@ class PostureGuardian:
         
         message_label = tk.Label(
             frame,
-            text="Sit up straight, mi amor 💚",
+            text="Sit up straight 💚",
             font=('Helvetica', 16),
             bg='#FF3B30',
             fg='white'
@@ -220,6 +220,9 @@ class PostureGuardian:
                     neck_diff = abs(posture['neck_angle'] - 
                                    self.good_posture['neck_angle'])
                     
+                    # Debug: print values
+                    print(f"Shoulder diff: {shoulder_diff:.1f}° | Neck diff: {neck_diff:.1f}° | Sensitivity: {self.sensitivity}°")
+                    
                     is_bad_posture = (shoulder_diff > self.sensitivity or 
                                     neck_diff > self.sensitivity or
                                     (posture['head_forward'] and 
@@ -227,7 +230,8 @@ class PostureGuardian:
                     
                     if is_bad_posture:
                         self.bad_posture_counter += 1
-                        if self.bad_posture_counter > 10:  # ~2 seconds
+                        print(f"Bad posture counter: {self.bad_posture_counter}")
+                        if self.bad_posture_counter > 5:  # ~1 second instead of 2
                             self.show_alert()
                             self.update_status("⚠️ Poor posture detected!", "red")
                     else:
